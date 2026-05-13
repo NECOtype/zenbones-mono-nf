@@ -40,6 +40,9 @@ jobs:
 
           for font in fonts/**/*.ttf ; do
             echo "Patching $font"
+
+            base=$(basename "$font" .ttf)
+
             fontforge  \
               --script FontPatcher/font-patcher \
               --complete \
@@ -47,13 +50,13 @@ jobs:
               --careful \
               --name "Zenbones-MonoNF" \
               "$font" \
-              -o ./patched-fonts
+              -o ./patched-fonts/${base}-NF.ttf
           done
           echo "All fonts patched successfully"
 
       - name: Package fonts
         run: |
-          zip -r -q Zenbones-MonoNF.zip ./patched-fonts/*.ttf
+          zip -r -q Zenbones-Mono-NF.zip ./patched-fonts/*.ttf
 
       - name: Get Zenbones version
         id: version
@@ -67,4 +70,4 @@ jobs:
         with:
           tag_name: ${{ steps.version.outputs.tag }}
           name: Zenbones Mono Nerd Font ${{ steps.version.outputs.tag }}
-          files: Zenbones-MonoNF.zip
+          files: Zenbones-Mono-NF.zip
